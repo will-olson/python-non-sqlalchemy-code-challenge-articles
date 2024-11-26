@@ -10,6 +10,12 @@ class Article:
         self.magazine = magazine
 
         Article.all.append(self)
+        if self not in author.articles():
+            author.articles().append(self)
+
+        if self not in magazine.articles():
+            magazine.add_article(self)
+        
 
     @property
     def title(self):
@@ -54,9 +60,7 @@ class Author:
         return self._articles
 
     def add_article(self, magazine, title):
-        article = Article(self, magazine, title)
-        self._articles.append(article)
-        return article
+        return Article(self, magazine, title)
 
     def magazines(self):
         magazines = {article.magazine for article in self._articles}
@@ -119,8 +123,8 @@ class Magazine:
             author_counts[author] = author_counts.get(author, 0) + 1
         return [author for author, count in author_counts.items() if count > 2] or None
 
-    @staticmethod
-    def top_publisher():
-        if not Magazine.all:
-            return None
-        return max(Magazine.all, key=lambda mag: len(mag.articles), default=None)
+    # @staticmethod
+    # def top_publisher():
+    #     if not Magazine.all:
+    #         return None
+    #     return max(Magazine.all, key=lambda mag: len(mag.articles), default=None)
